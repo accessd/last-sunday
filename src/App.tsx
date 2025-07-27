@@ -42,9 +42,9 @@ function App() {
 
   if (!user) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-4">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-4 text-center">
         <h1 className="text-2xl font-semibold">The Last Sunday</h1>
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form onSubmit={handleSubmit} className="mx-auto space-y-2">
           <input
             type="text"
             placeholder="Your name"
@@ -71,13 +71,26 @@ function App() {
   }
 
   const lifeExpectancy = 80
-  const sundaysLeft = Math.max(0, Math.round((lifeExpectancy - user.age) * 52))
+  const totalSundays = lifeExpectancy * 52
+  const sundaysPassed = Math.round(user.age * 52)
+  const sundaysLeft = Math.max(0, totalSundays - sundaysPassed)
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-4">
+    <div className="flex min-h-svh flex-col items-center justify-center gap-4 p-4 text-center">
       <h1 className="text-2xl font-semibold">
         Hello {user.name}, you have {sundaysLeft} Sundays left
       </h1>
+      <div
+        className="mx-auto grid gap-1"
+        style={{ gridTemplateColumns: 'repeat(52, minmax(0, 1fr))', width: '100%', maxWidth: '520px' }}
+      >
+        {Array.from({ length: totalSundays }).map((_, i) => (
+          <div
+            key={i}
+            className={`h-2 w-2 rounded-sm ${i < sundaysPassed ? 'bg-primary/30' : 'bg-primary'}`}
+          />
+        ))}
+      </div>
       <Button onClick={handleReset}>Change info</Button>
     </div>
   )
